@@ -1,6 +1,6 @@
 {
   "name": "onboarding-website",
-"type": "module",
+  "type": "module",
   "version": "1.0.0",
   "description": "Website for onboarding.vip",
   "main": "onboarding_website.js",
