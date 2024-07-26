@@ -1,0 +1,50 @@
+------------ PREP ------------
+* create backend/
+* "npm create vite@latest frontend -- --template react"
+* delete "App.css"
+* delete "index.css" contents
+* install tailwind css with vite
+
+---------- BACKEND -----------
+* cd backend/
+* create index.js
+* "npm init -y"
+* add "type":"module" to package.json
+* install express, nodemon, mongodb, nodemailer, dotenv, mongoose, cors, axios
+* add PORT number and MongoDBURL to .env
+* divide index.js into 2 sections: MIDDLEWARE and ROUTES
+* create controllers folder
+
+---------- DATABASE -----------
+* go to backend/ and create a models folder then create the user schema
+* create routes folder
+
+--------- NAV BAR -----------
+References:
+- https://www.youtube.com/watch?v=17l6AOc8s10&t=1402s
+
+* go to src/ then create components/
+* create Navbar.jsx component
+* "npm i react-router-dom"
+* import {Link} from "react-router-dom";
+* go to main.jsx 
+* import BrowserRouter from "react-router-dom";
+* repace React.stricmode with BrowserRouter
+* go to src and create pages folder
+* create the pages for the Navbar
+* go to App.jsx then import Routes and Route
+* create Route for each page
+* create index.js for cleaner routing
+* update imports on App.jsx
+
+
+
+------------- RUNNING CONCURRENTLY -------------
+* go to project folder onboarding.vip/
+* "npm i concurrently --save-dev"
+*
+
+
+----------- CONNECTING FRONTEND TO BACKEND -----------
+* make a route file
+*
