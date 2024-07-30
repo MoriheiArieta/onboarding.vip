@@ -5,17 +5,25 @@ import mongoose from "mongoose";
 import login from "./routes/login.js";
 import session from "express-session";
 import logout from "./routes/logout.js";
+import checkAuth from "./routes/checkAuth.js";
+import home from "./routes/home.js";
+import verifyMagicLink from "./routes/verifyMagicLink.js";
 
 dotenv.config();
 const app = express();
 
 app.use(express.json());
+
+// specific ports
 app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
   })
 );
+
+// all ports
+// app.use(cors());
 
 app.use(
   session({
@@ -30,22 +38,12 @@ app.use(
   })
 );
 
-app.get("/", (request, response) => {
-  request.session.visited = true;
-  return response.send("onboarding.vip");
-});
-
+// ROUTES
+app.use("/", home);
 app.use("/login", login);
+app.use("/verify", verifyMagicLink);
 app.use("/logout", logout);
-
-// Add a route to check authentication status
-app.get("/check-auth", (req, res) => {
-  if (req.session.userId) {
-    res.json({ isAuthenticated: true });
-  } else {
-    res.json({ isAuthenticated: false });
-  }
-});
+app.use("/check-auth", checkAuth);
 
 mongoose
   .connect(process.env.MONGODB_URL)

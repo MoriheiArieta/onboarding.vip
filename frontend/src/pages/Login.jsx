@@ -1,32 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useLocation } from "react-router-dom";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { login } = useContext(AuthContext);
+  const { login, checkAuthStatus } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
+    setMessage("");
+    setIsLoading(true);
 
     if (!email) {
-      setError("Email is required");
+      setMessage("Email is required");
+      setIsLoading(false);
       return;
     }
 
     try {
-      await login(email);
-      const from = location.state?.from?.pathname || "/";
-      navigate(from, { replace: true });
+      const response = await login(email);
+      setMessage(response.message);
+
+      // Start polling for authentication status
+      const pollInterval = setInterval(async () => {
+        const isAuthenticated = await checkAuthStatus();
+        if (isAuthenticated) {
+          clearInterval(pollInterval);
+          setIsLoading(false);
+          navigate("/dashboard");
+        }
+      }, 2000); // Check every 2 seconds
+
+      // Stop polling after 2 minutes (adjust as needed)
+      setTimeout(() => {
+        clearInterval(pollInterval);
+        setIsLoading(false);
+        setMessage("Login timeout. Please try again.");
+      }, 120000);
     } catch (err) {
-      setError("Login failed. Please try again.");
+      setMessage("Login failed. Please try again.");
       console.error(err);
+      setIsLoading(false);
     }
   };
 
@@ -44,15 +61,23 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="border-2 border-gray-500 px-4 py-2 rounded-xl"
+            disabled={isLoading}
           />
         </div>
         <button
           className="p-2 bg-[#058689] text-white rounded-xl"
           onClick={handleLogin}
+          disabled={isLoading}
         >
-          Submit
+          {isLoading ? "Waiting for verification..." : "Submit"}
         </button>
+        {message && <p className="mt-4 text-center">{message}</p>}
       </div>
+      {isLoading && (
+        <p className="mt-4 text-center">
+          Please check your email and click the magic link to complete login.
+        </p>
+      )}
     </div>
   );
 };

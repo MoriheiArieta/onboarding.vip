@@ -1,5 +1,4 @@
-// models/User.js
-
+import { v4 as uuidv4 } from "uuid";
 import mongoose from "mongoose";
 
 const userSchema = mongoose.Schema(
@@ -9,13 +8,15 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
-    magicLinkToken: {
+    magicLink: {
       type: String,
-      default: null,
+      default: uuidv4(),
+      required: false,
+      unique: false,
     },
-    magicLinkExpires: {
-      type: Date,
-      default: null,
+    magicLinkExpired: {
+      type: Boolean,
+      default: false,
     },
   },
   { strictQuery: false }

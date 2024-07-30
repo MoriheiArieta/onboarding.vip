@@ -1,6 +1,6 @@
 import express from "express";
 
-// create and save a new user
+
 const router = express.Router();
 //logout
 router.post("/", (req, res) => {

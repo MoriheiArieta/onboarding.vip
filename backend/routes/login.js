@@ -1,10 +1,11 @@
-// routes/login.js
-
 import express from "express";
 import validator from "validator";
 import { User } from "../models/User.js";
+import { v4 as uuidv4 } from "uuid"; //random uuid generator
+import sendMagicLink from "../controllers/mailer.js";
 
 const router = express.Router();
+
 
 router.post("/", async (request, response) => {
   try {
@@ -14,31 +15,25 @@ router.post("/", async (request, response) => {
       return response.status(400).send({ message: "Invalid email provided" });
     }
 
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email: email });
+
     if (!user) {
       user = await User.create({ email });
     }
 
-    request.session.userId = user._id;
+    const magicLink = uuidv4();
+    user.magicLink = magicLink;
+    user.magicLinkExpired = false;
+    await user.save();
 
-    return response
+    await sendMagicLink(email, magicLink);
+
+    response
       .status(200)
-      .send({ message: "User successfully logged in" });
+      .send({ message: "Magic link sent to your email.", userId: user._id });
   } catch (error) {
     response.status(500).send({ message: error.message });
   }
-});
-
-router.post("/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res
-        .status(500)
-        .send({ message: "Could not log out, please try again" });
-    }
-    res.clearCookie("connect.sid");
-    return res.status(200).send({ message: "Logout successful" });
-  });
 });
 
 export default router;

@@ -1,4 +1,4 @@
-// src/context/AuthContext.js
+// frontend/AuthContext.jsx
 
 import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
@@ -9,32 +9,34 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
   const checkAuthStatus = async () => {
     try {
       const response = await axios.get("http://localhost:5000/check-auth", {
         withCredentials: true,
       });
       setIsAuthenticated(response.data.isAuthenticated);
+      return response.data.isAuthenticated;
     } catch (error) {
       console.error("Error checking auth status:", error);
       setIsAuthenticated(false);
+      return false;
     } finally {
       setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
   const login = async (email) => {
     try {
-      await axios.post(
+      const response = await axios.post(
         "http://localhost:5000/login",
         { email },
         { withCredentials: true }
       );
-      setIsAuthenticated(true);
+      return response.data;
     } catch (error) {
       console.error("Login error:", error);
       throw error;
@@ -44,7 +46,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(
-        "http://localhost:5000/login/logout",
+        "http://localhost:5000/logout",
         {},
         { withCredentials: true }
       );
@@ -55,7 +57,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isLoading, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, isLoading, login, logout, checkAuthStatus }}
+    >
       {children}
     </AuthContext.Provider>
   );

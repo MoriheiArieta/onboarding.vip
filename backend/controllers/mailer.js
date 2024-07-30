@@ -1,26 +1,41 @@
-// config/email.js
-
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com", // Use your email service
-  port: 587,
+const transport = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.NODEMAILER_EMAIL,
+    pass: process.env.NODEMAILER_PASSWORD,
   },
 });
 
-export const sendMagicLink = async (email, token) => {
-  const magicLink = `http://localhost:5173/auth/${token}`; // Your frontend URL
+const sendMagicLink = async (email, token) => {
+  const subject = "Your Magic Link";
+  const verifyUrl = `http://localhost:5000/verify?token=${token}`;
+  const body = `
+    <p>Hi! Click this link to log in:</p>
+    <a href="${verifyUrl}">Verify your login</a>
+    <p>If you didn't request this, please ignore this email.</p>
+  `;
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
     to: email,
-    subject: "Your Magic Link",
-    text: `Click this link to log in: ${magicLink}`,
-    html: `<p>Click <a href="${magicLink}">here</a> to log in.</p>`,
+    from: process.env.NODEMAILER_EMAIL,
+    subject: subject,
+    html: body,
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    await transport.sendMail(mailOptions);
+    console.log("Magic link sent.");
+    return;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
+
+export default sendMagicLink;
