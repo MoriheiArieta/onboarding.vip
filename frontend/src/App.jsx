@@ -7,6 +7,7 @@ import Layout from "./Layout.jsx";
 import AuthWrapper from "./components/AuthWrapper";
 import AuthenticatedWrapper from "./components/AuthenticatedWrapper";
 import { AuthProvider } from "./context/AuthContext";
+import VerifyMagicLink from "./components/VerifyMagicLink";
 
 const App = () => {
   return (
@@ -18,7 +19,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
-
+            <Route path="/verify" element={<VerifyMagicLink />} />
             {/* Protected routes */}
             <Route
               path="/dashboard"
