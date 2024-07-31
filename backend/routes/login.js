@@ -6,7 +6,6 @@ import sendMagicLink from "../controllers/mailer.js";
 
 const router = express.Router();
 
-
 router.post("/", async (request, response) => {
   try {
     const { email } = request.body;
