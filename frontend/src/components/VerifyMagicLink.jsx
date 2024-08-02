@@ -16,7 +16,7 @@ const VerifyMagicLink = () => {
       if (token) {
         try {
           const response = await fetch(
-            `http://localhost:5000/verify?token=${token}`,
+            `https://glenn.onboarding.vip/verify?token=${token}`,
             {
               method: "GET",
               credentials: "include",

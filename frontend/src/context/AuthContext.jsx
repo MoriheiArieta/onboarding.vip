@@ -11,9 +11,12 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuthStatus = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/check-auth", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        "https://glenn.onboarding.vip/check-auth",
+        {
+          withCredentials: true,
+        }
+      );
       setIsAuthenticated(response.data.isAuthenticated);
       return response.data.isAuthenticated;
     } catch (error) {
@@ -32,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/login",
+        "https://glenn.onboarding.vip/login",
         { email },
         { withCredentials: true }
       );
@@ -46,7 +49,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await axios.post(
-        "http://localhost:5000/logout",
+        "https://glenn.onboarding.vip/logout",
         {},
         { withCredentials: true }
       );
