@@ -25,11 +25,11 @@ app.use(
   })
 );
 
-// const __filename = fileURLToPath(import.meta.url); //get resolved path to file
-// const __dirname = path.dirname(__filename); // get name of the directory
+const __filename = fileURLToPath(import.meta.url); //get resolved path to file
+const __dirname = path.dirname(__filename); // get name of the directory
 
-// // serve static files
-// app.use(express.static(path.join(__dirname, "../frontend/dist"))); // use like normal __dirname
+// serve static files
+app.use(express.static(path.join(__dirname, "../frontend/dist"))); // use like normal __dirname
 
 // all ports
 // app.use(cors());
@@ -55,9 +55,9 @@ app.use("/logout", logout);
 app.use("/check-auth", checkAuth);
 
 // Catch-all route
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
-// });
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
+});
 
 mongoose
   .connect(process.env.MONGODB_URL)
