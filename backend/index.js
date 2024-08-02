@@ -20,7 +20,7 @@ app.use;
 // specific ports
 app.use(
   cors({
-    origin: "http://localhost:5000", //change this to proper origin
+    origin: "https://glenn.onboarding.vip", //change this to proper origin
     credentials: true,
   })
 );
@@ -28,7 +28,9 @@ app.use(
 const __filename = fileURLToPath(import.meta.url); //get resolved path to file
 const __dirname = path.dirname(__filename); // get name of the directory
 
+// serve static files
 app.use(express.static(path.join(__dirname, "../frontend/dist"))); // use like normal __dirname
+
 // all ports
 // app.use(cors());
 
@@ -52,8 +54,6 @@ app.use("/verify", verifyMagicLink);
 app.use("/logout", logout);
 app.use("/check-auth", checkAuth);
 
-// serve static files
-
 // Catch-all route
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/dist", "index.html"));
@@ -65,6 +65,7 @@ mongoose
     console.log("Database connected.");
     app.listen(process.env.PORT, () => {
       console.log(`App is listening to port: ${process.env.PORT}`);
+      console.log("Press Ctrl + c to quit.");
     });
   })
   .catch((err) => {
