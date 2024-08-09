@@ -3,7 +3,7 @@ import { Pie } from "react-chartjs-2";
 
 const PieChart = ({ chartData }) => {
   return (
-    <div className="mb-20 w-[90%] max-w-[600px]">
+    <div>
       <h2 className="text-center">Pie Chart</h2>
       <Pie
         data={chartData}

@@ -41,17 +41,31 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-center font-bold">Charts sample using Chartsjs</h1>
-      <PieChart chartData={chartData} />
-      <BarChart chartData={chartData} />
-      <LineChart chartData={chartData} />
-      <h2 className="text-center font-bold">
+      <h2 className="text-center font-bold mt-4">
         Flowchart sample using React Flow
       </h2>
-      <div className="w-[80%] h-[100vh] my-4 border border-gray-300 rounded-lg">
+      <div className="w-[80%] h-[80vh] my-4 border border-gray-300 rounded-lg">
         <ReactFlowProvider>
           <FlowChart />
         </ReactFlowProvider>
+      </div>
+      <h1 className="text-center font-bold mt-4">
+        Charts sample using Chartsjs
+      </h1>
+      <div className="flex flex-row h-[600px] w-[80%]  border-red-700 rounded-lg p-4 mb-10">
+        <div className="w-1/2 h-full  border-red-700 rounded-lg p-4 flex items-center justify-center">
+          <div className="w-full h-full">
+            <PieChart chartData={chartData} />
+          </div>
+        </div>
+        <div className="w-1/2 h-full flex flex-col pl-4">
+          <div className="h-1/2  border-red-700 rounded-lg p-4 mb-4">
+            <BarChart chartData={chartData} />
+          </div>
+          <div className="h-1/2  border-red-700 rounded-lg p-4">
+            <LineChart chartData={chartData} />
+          </div>
+        </div>
       </div>
     </div>
   );

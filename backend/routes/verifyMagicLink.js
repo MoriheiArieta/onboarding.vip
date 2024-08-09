@@ -8,7 +8,7 @@ router.get("/", async (request, response) => {
     const { token } = request.query;
 
     if (!token) {
-      return response.status(400).send({ message: "Invalid token" });
+      return response.status(400).send("Invalid token");
     }
 
     const user = await User.findOne({
@@ -17,7 +17,7 @@ router.get("/", async (request, response) => {
     });
 
     if (!user) {
-      return response.status(400).send({ message: "Invalid or expired token" });
+      return response.status(400).send("Invalid or expired token");
     }
 
     user.magicLinkExpired = true;
@@ -27,15 +27,15 @@ router.get("/", async (request, response) => {
     request.session.save((err) => {
       if (err) {
         console.error("Session save error:", err);
-        return response.status(500).send({ message: "Error creating session" });
+        return response.status(500).send("Error creating session");
       }
-      response.send(
-        "<h1>Verification successful. You can close this tab now.</h1>"
-      );
+
+      // Redirect to the dashboard
+      response.redirect("http://localhost:5173/dashboard");
     });
   } catch (error) {
     console.error("Verification error:", error);
-    response.status(500).send({ message: error.message });
+    response.status(500).send("An error occurred");
   }
 });
 

@@ -22,6 +22,7 @@ app.use(
   cors({
     origin: "https://glenn.onboarding.vip", //change this to proper origin
     credentials: true,
+    methods: ["GET", "POST"],
   })
 );
 

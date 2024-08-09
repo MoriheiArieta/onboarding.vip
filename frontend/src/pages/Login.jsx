@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
@@ -9,42 +9,55 @@ const Login = () => {
   const navigate = useNavigate();
   const { login, checkAuthStatus } = useContext(AuthContext);
 
+  useEffect(() => {
+    let pollInterval;
+
+    const checkAuth = async () => {
+      const isAuthenticated = await checkAuthStatus();
+      if (isAuthenticated) {
+        clearInterval(pollInterval);
+        window.close();
+        // closeTab(); // https://stackoverflow.com/questions/54996850/close-current-browser-tab-on-button-click-using-reactjs
+      }
+    };
+
+    if (isLoading) {
+      pollInterval = setInterval(checkAuth, 2000); // Check every 2 seconds
+    }
+
+    return () => {
+      if (pollInterval) clearInterval(pollInterval);
+    };
+  }, [isLoading, checkAuthStatus]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setMessage("");
     setIsLoading(true);
-
     if (!email) {
       setMessage("Email is required");
       setIsLoading(false);
       return;
     }
-
     try {
       const response = await login(email);
       setMessage(response.message);
-
       // Start polling for authentication status
-      const pollInterval = setInterval(async () => {
-        const isAuthenticated = await checkAuthStatus();
-        if (isAuthenticated) {
-          clearInterval(pollInterval);
-          setIsLoading(false);
-          navigate("/dashboard");
-        }
-      }, 2000); // Check every 2 seconds
-
-      // Stop polling after 2 minutes (adjust as needed)
       setTimeout(() => {
-        clearInterval(pollInterval);
         setIsLoading(false);
         setMessage("Login timeout. Please try again.");
-      }, 120000);
+      }, 120000); // Stop polling after 2 minutes
     } catch (err) {
       setMessage("Login failed. Please try again.");
       console.error(err);
       setIsLoading(false);
     }
+  };
+
+  const closeTab = () => {
+    window.opener = null;
+    window.open("", "_self");
+    window.close();
   };
 
   return (
@@ -76,6 +89,7 @@ const Login = () => {
       {isLoading && (
         <p className="mt-4 text-center">
           Please check your email and click the magic link to complete login.
+          This window will close automatically upon successful login.
         </p>
       )}
     </div>
