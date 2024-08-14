@@ -7,18 +7,14 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { login, checkAuthStatus } = useContext(AuthContext);
+  const { login, checkAuthStatus, isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     let pollInterval;
 
     const checkAuth = async () => {
-      const isAuthenticated = await checkAuthStatus();
-      if (isAuthenticated) {
-        clearInterval(pollInterval);
-        window.close();
-        // closeTab(); // https://stackoverflow.com/questions/54996850/close-current-browser-tab-on-button-click-using-reactjs
-      }
+      console.log("Polling for auth status...");
+      await checkAuthStatus();
     };
 
     if (isLoading) {
@@ -29,6 +25,13 @@ const Login = () => {
       if (pollInterval) clearInterval(pollInterval);
     };
   }, [isLoading, checkAuthStatus]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      console.log("Authentication successful, redirecting...");
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -52,12 +55,6 @@ const Login = () => {
       console.error(err);
       setIsLoading(false);
     }
-  };
-
-  const closeTab = () => {
-    window.opener = null;
-    window.open("", "_self");
-    window.close();
   };
 
   return (

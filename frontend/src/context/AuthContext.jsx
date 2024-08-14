@@ -6,15 +6,16 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const api = axios.create({
+    baseURL: "https://glenn.onboarding.vip",
+    withCredentials: true,
+  });
 
   const checkAuthStatus = async () => {
     try {
-      const response = await axios.get(
-        "https://glenn.onboarding.vip/check-auth",
-        {
-          withCredentials: true,
-        }
-      );
+      console.log("Checking auth status...");
+      const response = await api.get("/check-auth");
+      console.log("Auth status response:", response.data);
       setIsAuthenticated(response.data.isAuthenticated);
       return response.data.isAuthenticated;
     } catch (error) {
@@ -32,11 +33,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email) => {
     try {
-      const response = await axios.post(
-        "https://glenn.onboarding.vip/login",
-        { email },
-        { withCredentials: true }
-      );
+      const response = await api.post("/login", { email });
+      console.log("Login response:", response.data);
       return response.data;
     } catch (error) {
       console.error("Login error:", error);
@@ -46,11 +44,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(
-        "https://glenn.onboarding.vip/logout",
-        {},
-        { withCredentials: true }
-      );
+      await api.post("/logout");
       setIsAuthenticated(false);
     } catch (error) {
       console.error("Logout error:", error);

@@ -16,25 +16,32 @@ const Dashboard = () => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    const data = chartDataJson.data;
-    setChartData({
-      labels: data.map((item) => item.year),
-      datasets: [
-        {
-          label: "Users Gained ",
-          data: data.map((item) => item.userGain),
-          backgroundColor: [
-            "rgba(75,192,192,1)",
-            "#ecf0f1",
-            "#f0331a",
-            "#f3ba2f",
-            "#2a71d0",
+    fetch("https://glenn.onboarding.vip/api/chartData", {
+      credentials: "include", // This is important for including cookies in the request
+    })
+      .then((response) => response.json())
+      .then((jsonData) => {
+        const data = jsonData.data;
+        setChartData({
+          labels: data.map((item) => item.year),
+          datasets: [
+            {
+              label: "Users Gained ",
+              data: data.map((item) => item.userGain),
+              backgroundColor: [
+                "rgba(75,192,192,1)",
+                "#ecf0f1",
+                "#f0331a",
+                "#f3ba2f",
+                "#2a71d0",
+              ],
+              borderColor: "black",
+              borderWidth: 2,
+            },
           ],
-          borderColor: "black",
-          borderWidth: 2,
-        },
-      ],
-    });
+        });
+      })
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   if (!chartData) return <div>Loading...</div>;

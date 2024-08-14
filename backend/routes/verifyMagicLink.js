@@ -6,6 +6,7 @@ const router = express.Router();
 router.get("/", async (request, response) => {
   try {
     const { token } = request.query;
+    console.log("Received token:", token);
 
     if (!token) {
       return response.status(400).send("Invalid token");
@@ -16,6 +17,8 @@ router.get("/", async (request, response) => {
       magicLinkExpired: false,
     });
 
+    console.log("Found user:", user);
+
     if (!user) {
       return response.status(400).send("Invalid or expired token");
     }
@@ -24,14 +27,17 @@ router.get("/", async (request, response) => {
     await user.save();
 
     request.session.userId = user._id;
+    console.log("Session after setting userId:", request.session);
+
     request.session.save((err) => {
       if (err) {
         console.error("Session save error:", err);
         return response.status(500).send("Error creating session");
       }
 
+      console.log("Session saved successfully");
       // Redirect to the dashboard
-      response.redirect("http://localhost:5173/dashboard");
+      response.redirect("https://glenn.onboarding.vip/dashboard");
     });
   } catch (error) {
     console.error("Verification error:", error);

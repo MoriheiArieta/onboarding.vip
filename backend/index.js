@@ -10,6 +10,7 @@ import home from "./routes/home.js";
 import verifyMagicLink from "./routes/verifyMagicLink.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import chartData from "./routes/chartData.js";
 
 dotenv.config();
 const app = express();
@@ -44,6 +45,8 @@ app.use(
       secure: process.env.NODE_ENV === "production",
       maxAge: 60000 * 60, // 1 hour
       sameSite: "lax",
+      httpOnly: true,
+      domain: "localhost", // Add this line
     },
   })
 );
@@ -54,6 +57,7 @@ app.use("/login", login);
 app.use("/verify", verifyMagicLink);
 app.use("/logout", logout);
 app.use("/check-auth", checkAuth);
+app.use("/api", chartData);
 
 // Catch-all route
 app.get("*", (req, res) => {
