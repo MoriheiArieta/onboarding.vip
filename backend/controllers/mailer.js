@@ -14,7 +14,7 @@ const transport = nodemailer.createTransport({
 
 const sendMagicLink = async (email, token) => {
   const subject = "Your Magic Link";
-  const verifyUrl = `https://glenn.onboarding.vip/verify?token=${token}`;
+  const verifyUrl = `http://localhost:3000/verify?token=${token}`;
   const body = `
     <p>Hi! Click this link to log in:</p>
     <a href="${verifyUrl}">Verify your login</a>

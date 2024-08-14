@@ -16,7 +16,7 @@ const Dashboard = () => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    fetch("https://glenn.onboarding.vip/api/chartData", {
+    fetch("http://localhost:3000/api/chartData", {
       credentials: "include", // This is important for including cookies in the request
     })
       .then((response) => response.json())

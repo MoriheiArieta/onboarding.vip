@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const api = axios.create({
-    baseURL: "https://glenn.onboarding.vip",
+    baseURL: "http://localhost:3000",
     withCredentials: true,
   });
 

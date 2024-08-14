@@ -46,7 +46,7 @@ app.use(
       maxAge: 60000 * 60, // 1 hour
       sameSite: "lax",
       httpOnly: true,
-      domain: "localhost", // Add this line
+      // domain: "localhost", // Add this line
     },
   })
 );
